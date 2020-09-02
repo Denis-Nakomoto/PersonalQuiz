@@ -14,64 +14,43 @@ class ResultsViewController: UIViewController {
     @IBOutlet weak var definitionLabel: UILabel!
     
     var results: [Answer] = []
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.setHidesBackButton(true, animated: false)
-        youAreLabel.text = "Вы - \(calculateResult().rawValue)"
-        definitionLabel.text = calculateResult().definition
+        navigationItem.hidesBackButton = true
+        youAreLabel.text = "Вы - \(calculateResult(for: results).rawValue)"
+        definitionLabel.text = calculateResult(for: results).definition
     }
     
-    func calculateResult() -> AnimalType {
-        var maximum = [0, 0, 0, 0]
-        var whoAreYou: Int?
-        var pisiCat = false
-        var similarity = 0
-        var index = 0
+    func calculateResult(for answer: [Answer]) -> AnimalType {
+        var maximum = [AnimalType : Int?]()
+        var maximumDictValue = 0
+        var index: AnimalType!
+        var counter = 0
         
-        for answer in results {
-            if answer.type == .dog {
-                maximum[0] += 1
-            }
-            if answer.type == .cat {
-                maximum[1] += 1
-            }
-            if answer.type == .rabbit {
-                maximum[2] += 1
-            }
-            if answer.type == .turtle {
-                maximum[3] += 1
+        for item in answer {
+            maximum[item.type, default:0]! += 1
+        }
+        
+        for (key, value) in maximum {
+            if let val = value {
+                if val > maximumDictValue {
+                    maximumDictValue = val
+                    index = key
+                }
             }
         }
         
-        whoAreYou = maximum.max()
-        
-        for (i, item) in maximum.enumerated() {
-            if item == whoAreYou {
-                similarity += 1
-                index = i
+        for (_, value) in maximum {
+            if maximumDictValue == value {
+                counter += 1
             }
-            if similarity > 1 {
-                pisiCat = true
+            if counter > 1 {
+                index = .pisiCat
             }
         }
-        
-        if pisiCat {
-            return .pisiCat
-        } else {
-            switch maximum[index] {
-            case 0:
-                return .dog
-            case 1:
-                return .cat
-            case 2:
-                return .rabbit
-            case 3:
-                return .turtle
-            default:
-                return .dog
-            }
-        }
+        print(maximum)
+        return index
     }
 }

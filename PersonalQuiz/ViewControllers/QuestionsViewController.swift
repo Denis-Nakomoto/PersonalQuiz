@@ -61,18 +61,7 @@ class QuestionsViewController: UIViewController {
     }
     
     @IBAction func rangedAnswerButtonPressed() {
-        //        var index = lrintf(rangedSlider.value * Float(currentAnswers.count - 1))
-        var index = 2
-        if rangedSlider.value < 0.25 {
-            index = 0
-        } else if rangedSlider.value >= 0.25 && rangedSlider.value > 0.5 {
-            index = 1
-        } else if rangedSlider.value >= 0.5 && rangedSlider.value > 0.75 {
-            index = 2
-        }else if rangedSlider.value >= 0.75 && rangedSlider.value >= 1 {
-            index = 3
-        }
-        
+        let index = lrintf(rangedSlider.value)
         answersChoosen.append(currentAnswers[index])
         nextQuestion()
     }
